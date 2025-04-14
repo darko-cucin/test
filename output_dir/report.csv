@@ -1,0 +1,3 @@
+input,output,status
+/Users/darko/Desktop/Epam/input_from_docker/SRR019002_1.fastq.gz;/Users/darko/Desktop/Epam/input_from_docker/SRR019002_2.fastq.gz,/Users/darko/Desktop/Epam/output_from_docker/SRR019002,OK
+/Users/darko/Desktop/Epam/input_from_docker/SRR25800099_1.fastq.gz;/Users/darko/Desktop/Epam/input_from_docker/SRR25800099_2.fastq.gz,/Users/darko/Desktop/Epam/output_from_docker/SRR25800099,OK
