@@ -29,12 +29,12 @@ check_if_parameter_provided "$OUTPUT_DIR" "output_directory"
 check_if_parameter_provided "$OUTPUT_DIR_LOCAL" "output_local_directory"
 check_if_parameter_provided "$REFERENCE_GENOME" "reference_genome_file"
 
-current_dir=$(pwd)
-
 echo "Directory where fastq files will be stored:" "$current_dir/$FASTQ_DIR"
 echo "Directory where the input files will be stored:" "$current_dir/$OUTPUT_DIR"
 echo "Reference genome file:" "$current_dir/$REFERENCE_GENOME"
 echo "Samples that will be processed:" "${ACC_NUMBERS[@]}"
+
+current_dir=$(pwd)
 
 # Log file of the whole pipeline
 WHOLE_LOG_FILE=$current_dir/"../opt/logfile.log"
@@ -94,4 +94,9 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
-echo "All steps completed successfully!"
+# The last check if all processes finished successfully
+if grep -q "failed" $LOG_FILE; then
+    echo "Finished with errors. Please check the report.csv file"
+else
+    echo "All steps completed successfully!"
+fi
