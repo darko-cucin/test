@@ -47,9 +47,7 @@ jobs:
   nf-core-changes:
     name: nf-core-changes
     runs-on:
-      - runs-on=${{ github.run_id }}-nf-core-changes
-      - runner=4cpu-linux-x64
-      - image=ubuntu22-full-x64
+      'ubuntu-latest'
     outputs:
       # https://github.com/dorny/paths-filter?tab=readme-ov-file#custom-processing-of-changed-files
       modules: ${{ steps.filter.outputs.modules }}
