@@ -16,8 +16,7 @@ on:
 
 permissions:
   contents: read
-  pull-requests: read
-  
+  pull-requests: read  
 jobs:
   check-files:
     runs-on: ubuntu-latest
