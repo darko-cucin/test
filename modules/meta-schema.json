@@ -10,7 +10,7 @@
         },
         "description": {
             "type": "string",
-            "description": "Description of the module" 
+            "description": "Description of the module"
         },
         "keywords": {
             "type": "array",
@@ -73,7 +73,7 @@
                             },
                             {
                                 "required": ["tool_dev_url"]
-                            } 
+                            }
                         ]
                     }
                 }
