@@ -1,3 +1,0 @@
-input,output,status
-/Users/user/pipeline/paired_end_multiple_local_input/SRR019002_1.fastq.gz;/Users/user/pipeline/paired_end_multiple_local_input/SRR019002_2.fastq.gz,/Users/user/pipeline/paired_end_multiple_local_output/SRR019002,OK
-/Users/user/pipeline/paired_end_multiple_local_input/SRR25800099_1.fastq.gz;/Users/user/pipeline/paired_end_multiple_local_input/SRR25800099_2.fastq.gz,/Users/user/pipeline/paired_end_multiple_local_output/SRR25800099,OK

@@ -1,14 +1,18 @@
+# Run linting for modules
 name: Run Linting
 on:
-  push:
-    branches:
-      # https://docs.renovatebot.com/key-concepts/automerge/#branch-vs-pr-automerging
-      - "renovate/**" # branches Renovate creates
+  # It is enough to have this action called when PR for master/main branch is created
   pull_request:
     branches: [master]
-  merge_group:
-    types: [checks_requested]
-    branches: [master]
+  # Discuss this merge group thing. I think we can remove it as it is used for situations where we have a lot of pull requests on the.
+  # Same branch. In our situation we will not expect it. I will comment these lines of code.
+  #merge_group:
+  #  types: [checks_requested]
+  #  branches: [master]
+
+  # This chunk of code gives us posibility to manually trigger this pipeline on self-hosted or ubuntu machine. 
+  # This approach allows developers to choose the desired environment when manually triggering a job, without needing to modify 
+  # the workflow code each time. I do not find it useful so I will consider removing it
   workflow_dispatch:
     inputs:
       runners:
@@ -25,13 +29,16 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  NXF_SINGULARITY_CACHEDIR: ${{ github.workspace }}/.singularity
-  NXF_SINGULARITY_LIBRARYDIR: ${{ github.workspace }}/.singularity
+  # We do not need singularity. Because we will only test with docker
+  #NXF_SINGULARITY_CACHEDIR: ${{ github.workspace }}/.singularity
+  #NXF_SINGULARITY_LIBRARYDIR: ${{ github.workspace }}/.singularity
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   # renovate: datasource=github-releases depName=nextflow/nextflow versioning=semver
   NXF_VER: "25.04.8"
 
+
 jobs:
+  # First job that will run prek which is some kind of prettier. We can use prettier also but this action is also suitable
   pre-commit:
     runs-on: ${{ github.event.inputs.runners || github.run_number > 1 && 'ubuntu-latest' || 'self-hosted' }}
     steps:
@@ -44,9 +51,11 @@ jobs:
   ###################
   # TODO Move these to pre-commit
   # https://github.com/nf-core/tools/pull/3141
+  # Here we should see if ubuntu-latest is enough to run. Instead of self-hosting machine
   nf-core-changes:
     name: nf-core-changes
     runs-on: "ubuntu-latest"
+    # these are outputs of this step that will be used for next steps. 
     outputs:
       # https://github.com/dorny/paths-filter?tab=readme-ov-file#custom-processing-of-changed-files
       modules: ${{ steps.filter.outputs.modules }}
@@ -61,8 +70,9 @@ jobs:
 
       - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
         with:
-          fetch-depth: 2 # To retrieve the preceding commit.
+            fetch-depth: 2 # To retrieve the preceding commit.
 
+      # here we just need to pay attention on naming (nf-core is now but we will see how it will be named)
       - uses: dorny/paths-filter@de90cc6fb38fc0963ad72b210f1f284cd68cea36 # v3
         id: filter
         with:
@@ -74,6 +84,7 @@ jobs:
           token: ""
           list-files: "json"
 
+      # here also. Just pay attention to way how we get module names. Set this appropriatelly for them
       - name: Get module name
         uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8
         id: module_names
@@ -99,6 +110,7 @@ jobs:
               )
             )];
 
+      # Think if we need it 
       - name: debug
         run: |
           echo ${{ steps.filter.outputs.modules_files }}
@@ -106,6 +118,7 @@ jobs:
           echo ${{ steps.filter.outputs.subworkflows_files }}
           echo ${{ steps.subworkflow_names.outputs.result }}
 
+  # again think about machines
   nf-core-lint-modules:
     runs-on: "ubuntu-latest"
     name: nf-core lint modules
@@ -126,6 +139,7 @@ jobs:
         with:
           python-version: "3.14"
 
+      # github action cache to cache dependencies and other files on the runner to speed up the process
       - uses: actions/cache@9255dc7a253b0ccc959486e2bca901246202afeb # v5
         id: cache-pip
         with:
@@ -180,6 +194,7 @@ jobs:
       - name: Lint subworkflow ${{ matrix.subworkflow }}
         run: nf-core subworkflows lint ${{ matrix.subworkflow }}
 
+  # We can keep this step to confirm everything runs sucessfully.
   confirm-pass-lint:
     runs-on: "ubuntu-latest"
     needs: [nf-core-lint-modules, nf-core-lint-subworkflows]

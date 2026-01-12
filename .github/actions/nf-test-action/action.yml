@@ -1,3 +1,4 @@
+# Run nf tests
 name: "nf-test Action"
 description: "Runs nf-test with common setup steps"
 inputs:
@@ -15,6 +16,7 @@ inputs:
     required: true
 
 runs:
+  # to not run a lot of tasks in parallel
   using: "composite"
   steps:
     - uses: actions/setup-java@f2beeb24e141e01a676f977032f5a29d81c9e27e # v5
@@ -38,7 +40,7 @@ runs:
         version: "${{ env.NFT_VER }}"
         install-pdiff: true
 
-    # Set up secrets
+    # Set up secrets. We will have sentioneon so think about it 
     - name: Set up Nextflow secrets
       if: env.SENTIEON_ENCRYPTION_KEY != '' && env.SENTIEON_LICENSE_MESSAGE != ''
       shell: bash

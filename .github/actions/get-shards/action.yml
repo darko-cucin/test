@@ -1,3 +1,5 @@
+# Shards are used to separate jobs on multiple machines and to speed up execution of github actions. We can leave it as is but 
+# we will not have a lot of tests so I think it is not important too much
 name: "Get number of shards"
 description: "Get the number of nf-test shards for the current CI job"
 inputs:
