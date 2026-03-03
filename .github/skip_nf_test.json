@@ -1,3 +1,4 @@
+// Consider removing this file as we will not have gpu tests.
 {
     "conda": [
         "modules/nf-core/angsd/gl",

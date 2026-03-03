@@ -1,3 +1,4 @@
+# Run nf tests
 name: "nf-test Action"
 description: "Runs nf-test with common setup steps"
 inputs:
@@ -15,6 +16,7 @@ inputs:
     required: true
 
 runs:
+  # to not run a lot of tasks in parallel
   using: "composite"
   steps:
     - uses: actions/setup-java@f2beeb24e141e01a676f977032f5a29d81c9e27e # v5
@@ -38,27 +40,7 @@ runs:
         version: "${{ env.NFT_VER }}"
         install-pdiff: true
 
-    - name: Set up apptainer
-      if: contains(inputs.profile, 'singularity')
-      shell: bash
-      run: |
-        sudo apt update
-        sudo apt install -y software-properties-common
-        sudo add-apt-repository -y ppa:apptainer/ppa
-        sudo apt update
-        sudo apt install -y apptainer apptainer-suid
-        mkdir -p $NXF_SINGULARITY_CACHEDIR
-        mkdir -p $NXF_SINGULARITY_LIBRARYDIR
-
-    - name: Set up Conda
-      if: ${{contains(inputs.profile, 'conda')}}
-      uses: conda-incubator/setup-miniconda@835234971496cad1653abb28a638a281cf32541f # v3
-      with:
-        auto-update-conda: true
-        conda-solver: libmamba
-        conda-remove-defaults: true
-
-    # Set up secrets
+    # Set up secrets. We will have sentioneon so think about it 
     - name: Set up Nextflow secrets
       if: env.SENTIEON_ENCRYPTION_KEY != '' && env.SENTIEON_LICENSE_MESSAGE != ''
       shell: bash

@@ -1,3 +1,4 @@
+# This is good feature to have but for the start we do not need it. Maybe consider adding it later. 
 name: fix-linting
 run-name: fix linting (automated)
 on:
